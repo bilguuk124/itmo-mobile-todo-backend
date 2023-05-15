@@ -3,20 +3,23 @@ package com.mobile.repository
 import com.mobile.models.User
 import com.mobile.models.Users
 import com.mobile.plugins.DatabaseFactory.dbQuery
-import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.selectAll
 import org.koin.core.component.KoinComponent
 
 interface UserRepository{
     suspend fun getAll() : List<User>
     suspend fun getUserById(id: Long) : User?
-    suspend fun addUser(user: User)
+    suspend fun addUser(name: String, email: String, password: String) : User?
+
+    suspend fun updateUser(id: Long, name:String, email:String, password: String) : Boolean
+
+    suspend fun deleteUser(id: Long) : Boolean
+
+    suspend fun login(email: String, password: String) : User?
 }
 
 class UserRepositoryImpl : UserRepository, KoinComponent{
-    private val users = ArrayList<User>();
 
     private fun resultRowToUser(row: ResultRow): User {
         return User(
@@ -28,6 +31,13 @@ class UserRepositoryImpl : UserRepository, KoinComponent{
        return dbQuery { Users.selectAll().map(::resultRowToUser) }
     }
 
+    override suspend fun login(email: String, password: String) : User?{
+        return dbQuery { Users
+            .select((Users.email eq email) and (Users.password eq password))
+            .map(::resultRowToUser)
+            .singleOrNull()}
+    }
+
     override suspend fun getUserById(id: Long): User? {
         return dbQuery{
             Users
@@ -37,8 +47,29 @@ class UserRepositoryImpl : UserRepository, KoinComponent{
         }
     }
 
-    override suspend fun addUser(user: User) {
-        TODO("Not yet implemented")
-    }
+    override suspend fun addUser(name: String, email: String, password: String) =
+       dbQuery {
+           val insertStatement = Users.insert{
+               it[Users.name] = name
+               it[Users.email] = email
+               it[Users.password] = password
+           }
+           insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToUser)
+       }
+
+    override suspend fun updateUser(id: Long, name:String, email:String, password: String) =
+        dbQuery {
+            Users.update ({ Users.id eq id}){
+                it[Users.name] = name
+                it[Users.email] = email
+                it[Users.password] = password
+            } > 0
+        }
+
+    override suspend fun deleteUser(id: Long): Boolean =
+        dbQuery {
+            Users.deleteWhere { Users.id eq id } > 0
+        }
+
 
 }

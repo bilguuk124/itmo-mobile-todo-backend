@@ -1,6 +1,6 @@
 package com.mobile.plugins
 
-import com.mobile.routes.todoRouting
+import com.mobile.controller.todoRouting
 import io.ktor.server.routing.*
 import io.ktor.server.response.*
 import io.ktor.server.application.*

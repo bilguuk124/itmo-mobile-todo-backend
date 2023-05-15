@@ -27,7 +27,7 @@ object Todos : Table(){
     val type = enumerationByName<Type>("type", 50)
     val description = text("description").nullable()
     val endDate = date("end_date").nullable()
-    val user = long("user_id").references(Users.id)
+    val userId = long("user_id").references(Users.id)
 
     override val primaryKey = PrimaryKey(id)
 }

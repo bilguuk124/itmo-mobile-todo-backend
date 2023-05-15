@@ -1,21 +1,20 @@
-package com.mobile.routes
+package com.mobile.controller
 
 import com.mobile.services.TodoService
-import io.ktor.http.*
+import com.mobile.services.UserService
 import io.ktor.server.application.*
-import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 
 
-fun Route.todoRouting(){
+fun Route.userRouting(){
 
-    val service by inject<TodoService>()
+    val todoService by inject<TodoService>()
+    val userService by inject<UserService>()
 
     route("/api/todo"){
         get{
-            call.respond(service.getAllTodo())
         }
     }
 }
