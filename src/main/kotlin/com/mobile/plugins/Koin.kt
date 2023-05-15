@@ -10,6 +10,7 @@ import com.mobile.security.hashing.SHA256HashingService
 import com.mobile.security.token.JwtTokenService
 import com.mobile.services.TodoService
 import com.mobile.services.UserService
+import com.mobile.security.token.TokenConfig
 import io.ktor.server.application.*
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
@@ -20,7 +21,6 @@ import org.koin.logger.slf4jLogger
 fun Application.configureKoin(){
     val todoModule = module{
         singleOf(::TodoRepositoryImpl) { bind<TodoRepository>()}
-
         singleOf(::TodoService)
     }
     val userModule = module{

@@ -14,18 +14,15 @@ fun main() {
 }
 
 fun Application.module() {
-    val tokenService = JwtTokenService()
     val tokenConfig = TokenConfig(
         issuer = "http://0.0.0.0:8080",
         audience = "http://0.0.0.0:8080/api",
         expiresIn = 365L * 1000L * 68L * 24L,
         secret = "6A576E5A7234753778214125442A472D4A614E645267556B5870327335763879"
     )
-    val hashingService = SHA256HashingService()
-
     DatabaseFactory.init()
     configureSerialization()
     configureSecurity(tokenConfig)
     configureKoin()
-    configureRouting()
+    configureRouting(tokenConfig)
 }
