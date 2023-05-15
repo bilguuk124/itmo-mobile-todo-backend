@@ -26,13 +26,19 @@ class TodoRepositoryImpl : TodoRepository, KoinComponent{
     private val userService by inject<UserService>()
 
     private fun resultRowToTodo(row: ResultRow) : Todo {
-        val todo = Todo(id = row[Todos.id],
-            name = row[Todos.name],
-            creationDate = row[Todos.creationDate],
-            user = runBlocking {userService.findById(row[Todos.userId])} )
-        todo.description = row[Todos.description]
-        todo.endDate = row[Todos.endDate]
-        return todo
+        val todo = runBlocking {userService.findById(row[Todos.userId])}?.let {
+            Todo(id = row[Todos.id],
+                name = row[Todos.name],
+                creationDate = row[Todos.creationDate],
+                user = it
+            )
+        }
+        if (todo != null) {
+            todo.description = row[Todos.description]
+            todo.endDate = row[Todos.endDate]
+            return todo
+        }
+        error("User was not found")
     }
 
     override suspend fun getAll(userId : Long): MutableList<Todo> {

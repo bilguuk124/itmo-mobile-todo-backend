@@ -33,7 +33,6 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation ("io.insert-koin:koin-ktor:$koin_version")
     implementation ("io.insert-koin:koin-logger-slf4j:$koin_version")
-    implementation("com.h2database:h2:2.1.214")
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
@@ -41,6 +40,9 @@ dependencies {
     implementation("com.h2database:h2:$h2_version")
     implementation("io.ktor:ktor-server-auth:$ktor_version")
     implementation("io.ktor:ktor-server-auth-jwt:$ktor_version")
+    implementation("io.ktor:ktor-server-auth-jvm:2.3.0")
+    implementation("io.ktor:ktor-server-auth-jwt-jvm:2.3.0")
+    implementation("commons-codec:commons-codec:1.15")
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 }

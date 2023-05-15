@@ -1,18 +1,16 @@
 package com.mobile.models
 
-import kotlinx.datetime.Instant
-import org.jetbrains.exposed.sql.Column
-import org.jetbrains.exposed.sql.ReferenceOption
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.isNotNull
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.javatime.date
 import java.time.LocalDate
 
 
-data class Todo(val id: Long,
-                var name:String,
-                var creationDate: LocalDate,
-                var user: User){
+data class Todo(
+    var name: String,
+    var creationDate: LocalDate,
+    var user: User,
+    val id: Long
+){
     var priority: Int = 2
     var type: Type = Type.GLOBAL
     var description: String? = null

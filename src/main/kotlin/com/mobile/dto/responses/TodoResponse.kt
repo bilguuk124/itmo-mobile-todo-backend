@@ -1,7 +1,6 @@
-package com.mobile.dto
+package com.mobile.dto.responses
 
 import com.mobile.models.Type
-import kotlinx.datetime.Instant
 import java.time.LocalDate
 
 data class TodoResponse(val name: String, val creationDate: LocalDate,

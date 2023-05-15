@@ -10,7 +10,9 @@ import org.koin.core.component.KoinComponent
 interface UserRepository{
     suspend fun getAll() : List<User>
     suspend fun getUserById(id: Long) : User?
-    suspend fun addUser(name: String, email: String, password: String) : User?
+
+    suspend fun getUserByEmail(email: String) : User?
+    suspend fun addUser(name: String, email: String, password: String, salt: String) : User?
 
     suspend fun updateUser(id: Long, name:String, email:String, password: String) : Boolean
 
@@ -23,7 +25,7 @@ class UserRepositoryImpl : UserRepository, KoinComponent{
 
     private fun resultRowToUser(row: ResultRow): User {
         return User(
-            id = row[Users.id], name = row[Users.name], email = row[Users.email], password = row[Users.password]
+            id = row[Users.id], name = row[Users.name], email = row[Users.email], password = row[Users.password], salt = row[Users.salt]
         )
     }
 
@@ -47,12 +49,20 @@ class UserRepositoryImpl : UserRepository, KoinComponent{
         }
     }
 
-    override suspend fun addUser(name: String, email: String, password: String) =
+    override suspend fun getUserByEmail(email: String): User? = dbQuery {
+        Users
+            .select(Users.email eq email)
+            .map (::resultRowToUser)
+            .singleOrNull()
+    }
+
+    override suspend fun addUser(name: String, email: String, password: String, salt:String) =
        dbQuery {
            val insertStatement = Users.insert{
                it[Users.name] = name
                it[Users.email] = email
                it[Users.password] = password
+               it[Users.salt] = salt
            }
            insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToUser)
        }
